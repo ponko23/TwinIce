@@ -1,3 +1,7 @@
+###
+  Model定義
+###
+
 # モデル1 アイスクリーム一覧
 icecreamModel =
   list: [
@@ -12,12 +16,11 @@ icecreamModel =
   getAll: () ->
     @list
 
-# IDで指定したアイスクリームオブジェクトを返す
+  # IDで指定したアイスクリームオブジェクトを返す
   findById: (id) ->
     $.grep(@list, (val) ->
       id == val.id
     )[0]
-
 
 # モデル2 選択されているアイスクリームの管理
 selectionModel =
@@ -34,9 +37,9 @@ selectionModel =
     if list.length > @icecreamNumber
       # アイスクリーム制限個数以上の場合は
       list.shift() # 0番目を捨てる
-    @updateView() # ビューを更新
+    @updateViews() # ビューを更新
 
-  # 指定したアイスクリムが選択されていればtrueが返る
+  # 指定したアイスクリームが選択されていればtrueが返る
   contain: (icecream) ->
     @list.indexOf(icecream) >= 0
 
@@ -49,15 +52,17 @@ selectionModel =
     @list
 
   # ビューを更新する
-  updateView: () ->
+  updateViews: () ->
     updateSelection()
     updateIcecreamList()
 
+###
+  View
+###
 # ビュー: チェックボックスを更新する
 updateSelection = () ->
   $('#icecreams input[type="checkbox"]').each (i, elm) ->
     elm.checked = selectionModel.containById elm.name
-  return
 
 # ビュー: 選択順序を更新するビュー
 updateIcecreamList = () ->
@@ -67,8 +72,34 @@ updateIcecreamList = () ->
       val.name
     ).join " > "
   )
-  return
 
+# アイスクリーム一覧を構築
+$ () ->
+  els = $ '#icecreams'
+  $.each icecreamModel.getAll(), (i,icecream) ->
+    els.append(
+      $("<li>")
+        .append($("<input type='checkbox'>")
+          .attr('name', icecream.id))
+          .append($("<span>")
+            .text(icecream.name))
+          .click (event) ->
+            onclickIcecream event
+    )
+  selectionModel.updateViews()
+
+###
+  Controller
+###
+# コントローラ: GUIのイベントからモデルの更新に変換
+onclickIcecream = (event) ->
+  checkbox = $(event.currentTarget).find 'input[type="checkbox"]'
+  if checkbox
+    selectionModel.add icecreamModel.findById checkbox.attr "name"
+
+###
+  Modelテスト
+###
 # 簡単なテストチェック関数
 ok = (title, expect, value) ->
   if expect is value
@@ -100,19 +131,3 @@ testModels = () ->
   ok "selectionModel.contain:3つめを追加した時の個数",false,selectionModel.contain all[0]
 
 testModels()
-
-# アイスクリーム一覧を構築
-$ () ->
-  els = $ '#icecreams'
-  $.each icecreamModel.getAll(), (i,icecream) ->
-    els.append(
-      $("<li>")
-        .append($("<input type='checkbox'>")
-          .attr('name', icecream.id))
-        .append($("<span>")
-          .text(icecream.name))
-        .click () ->
-          # ここでコントローラ呼び出し(あとで書く)
-    )
-    return
-  selectionModel.updateViews

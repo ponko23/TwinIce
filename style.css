@@ -1,0 +1,16 @@
+* {
+  padding: 0px;
+  margin: 0px;
+}
+body {
+  padding: 10px;
+}
+ul {
+  width: 200px;
+}
+li {
+  display: block;
+}
+.selected {
+  background-color: #ffaaaa;
+}
