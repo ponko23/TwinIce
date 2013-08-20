@@ -12,7 +12,7 @@ iceModel =
     {id:'t6', name:"抹茶"}
   ]
 
-  getAll: () ->
+  getAll: ->
     @list
 
   findById: (id) ->
@@ -37,10 +37,10 @@ selectionModel =
   containById: (id) ->
     @contain iceModel.findById id
 
-  getIce: () ->
+  getIce: ->
     @list
 
-  updateViews: () ->
+  updateViews: ->
     updateSelection()
     updateIceList()
 
@@ -49,21 +49,21 @@ selectionModel =
   view
 ###
 
-updateSelection = () ->
+updateSelection = ->
   $('#icecream-list').text(
     $.map(selectionModel.getIce(), (val) ->
       val.name
     ).join " > "
   )
 
-updateIceList = () ->
+updateIceList = ->
   $('.selected').removeClass "selected"
   for i in selectionModel.list
     if $('#'+i.id).hasClass "selected"
     else
       $('#'+i.id).addClass "selected"
 
-$ () ->
+$ ->
   els = $('#icecreams')
   $.each iceModel.getAll(), (i,icecream) ->
    els.append(
@@ -94,26 +94,26 @@ ok = (title, expect, value) ->
     console.log "NG : "+title+" ["+expect+"] --> ["+value+"]"
 
 # テスト内容
-testModels = () ->
+testModels = ->
   all = iceModel.getAll()
 
-  ok "iceModel:個数",all.length,6
-  ok "iceModel.findById",iceModel.findById("t4"), all[3]
+  ok "iceModel:個数", all.length, 6
+  ok "iceModel.findById", iceModel.findById("t4"), all[3]
 
-  ok "selectionModel:最初の個数",selectionModel.getIce().length,0
-  ok "selectionModel.contain:空の場合",false,selectionModel.contain all[0]
+  ok "selectionModel:最初の個数", selectionModel.getIce().length, 0
+  ok "selectionModel.contain:空の場合", false, selectionModel.contain all[0]
 
   selectionModel.add all[0]
-  ok "selectionModel.contain:1つめを追加した時の個数",selectionModel.getIce().length,1
-  ok "selectionModel.contain:1つめを追加した時のチェック",true,selectionModel.contain all[0]
+  ok "selectionModel.contain:1つめを追加した時の個数", selectionModel.getIce().length, 1
+  ok "selectionModel.contain:1つめを追加した時のチェック", true, selectionModel.contain all[0]
 
   selectionModel.add all[1]
-  ok "selectionModel.contain:2つめを追加した時の個数",selectionModel.getIce().length,2
-  ok "selectionModel.contain:2つめを追加した時のチェック",true,selectionModel.contain all[1]
+  ok "selectionModel.contain:2つめを追加した時の個数", selectionModel.getIce().length, 2
+  ok "selectionModel.contain:2つめを追加した時のチェック", true, selectionModel.contain all[1]
 
   selectionModel.add all[2]
-  ok "selectionModel:3つめを追加した場合の",selectionModel.getIce().length,2
-  ok "selectionModel.contain:3つめを追加した時のチェック",true,selectionModel.contain all[2]
-  ok "selectionModel.contain:3つめを追加した時の個数",false,selectionModel.contain all[0]
+  ok "selectionModel:3つめを追加した場合の", selectionModel.getIce().length, 2
+  ok "selectionModel.contain:3つめを追加した時のチェック", true, selectionModel.contain all[2]
+  ok "selectionModel.contain:3つめを追加した時の個数", false, selectionModel.contain all[0]
 
 testModels()
